@@ -17,11 +17,26 @@ function EscapeHTML(str) {
     return div.innerHTML;
 }
 
+// Helper function to validate and sanitize URLs
+function ValidateImageURL(url) {
+    try {
+        const urlObj = new URL(url);
+        // Only allow https protocol for security
+        if (urlObj.protocol === 'https:' || urlObj.protocol === 'http:') {
+            return url;
+        }
+    } catch (e) {
+        console.error('Invalid URL:', url);
+    }
+    // Return a placeholder or empty string for invalid URLs
+    return '';
+}
+
 // variables
 let selectedProduct;
 let maxProductQuantity;
 let lastButtonText = '';
-        let buttonTextMouseEnter = 'Añadir al Carro <img class="add-product" src="Recursos/imagenes/WEBP/AñadirAlCarro.webp" alt="Icono de añadir al carro" />';
+let buttonTextMouseEnter = 'Añadir al Carro <img class="add-product" src="Recursos/imagenes/WEBP/AñadirAlCarro.webp" alt="Icono de añadir al carro" />';
 let buttonTextMouseOut = 'Añadir al Carro <img class="add-product" src="Recursos/imagenes/WEBP/AñadirAlCarro.webp" alt="Icono de añadir al carro" />';
 
 
@@ -162,13 +177,13 @@ function AddProductsCards() {
 
         // Escape user-generated content to prevent XSS
         const escapedName = EscapeHTML(product.name);
-        const escapedImageURL = EscapeHTML(product.imageURL);
+        const validatedImageURL = ValidateImageURL(product.imageURL);
 
         productCard.innerHTML =
             `<div id="image-loader-${productIndex}" class="loader">
                 '<div></div><div></div><div></div><div></div>
             </div>
-            <img id="image-${productIndex}" class="product-image" src="${escapedImageURL}" alt="Imagen de ${escapedName}" />
+            <img id="image-${productIndex}" class="product-image" src="${validatedImageURL}" alt="Imagen de ${escapedName}" />
             <span id="product-quantity-${productIndex}" class="product-quantity">1</span>
             <span class="product-name">${escapedName}</span>
             <span class="product-price">${FormatPrice(product.price)}</span>
@@ -267,7 +282,8 @@ function ShowProductPopUp(productIndex) {
     let selectedProductIndex = GetSelectedProductIndex();
     let selectedProductQuantity = selectedProductsQuantities[selectedProductIndex];
 
-    popUpImage.src = selectedProduct.imageURL;
+    // Validate and sanitize the image URL before assigning
+    popUpImage.src = ValidateImageURL(selectedProduct.imageURL);
     popUpName.textContent = selectedProduct.name;
     popUpPrice.textContent = FormatPrice(selectedProduct.price);
     popUpStock.textContent = `Stock: ${selectedProduct.stock}`;

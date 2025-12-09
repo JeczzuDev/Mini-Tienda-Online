@@ -12,6 +12,21 @@ function EscapeHTML(str) {
     return div.innerHTML;
 }
 
+// Helper function to validate and sanitize URLs
+function ValidateImageURL(url) {
+    try {
+        const urlObj = new URL(url);
+        // Only allow https protocol for security
+        if (urlObj.protocol === 'https:' || urlObj.protocol === 'http:') {
+            return url;
+        }
+    } catch (e) {
+        console.error('Invalid URL:', url);
+    }
+    // Return a placeholder or empty string for invalid URLs
+    return '';
+}
+
 // Function to check if the cart is empty
 function SetShoppingCartProcess() {
     if (selectedProductsList.length > 0) {
@@ -40,13 +55,13 @@ function SetShoppingCart() {
         // Escape user-generated content to prevent XSS
         const escapedName = EscapeHTML(selectedProduct.name);
         const escapedDescription = EscapeHTML(selectedProduct.description);
-        const escapedImageURL = EscapeHTML(selectedProduct.imageURL);
+        const validatedImageURL = ValidateImageURL(selectedProduct.imageURL);
 
         cartProduct.innerHTML =
             `<div id="cart-image-loader-${productIndex}" class="loader">
                 '<div></div><div></div><div></div><div></div>
             </div>
-            <img id="cart-image-${productIndex}" class="cart-product-image" src="${escapedImageURL}" alt="Imagen de ${escapedName}" />
+            <img id="cart-image-${productIndex}" class="cart-product-image" src="${validatedImageURL}" alt="Imagen de ${escapedName}" />
             <div class="cart-product-description-group">
                 <span class="cart-product-name">${escapedName}</span>
                 <span class="cart-product-description">${escapedDescription}</span>
