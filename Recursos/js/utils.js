@@ -8,8 +8,11 @@
  * @returns {string} The escaped string
  */
 export function EscapeHTML(str) {
+    if (str === null || str === undefined) {
+        return '';
+    }
     const div = document.createElement('div');
-    div.textContent = str;
+    div.textContent = String(str);
     return div.innerHTML;
 }
 

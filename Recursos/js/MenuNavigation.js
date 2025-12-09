@@ -54,7 +54,7 @@ const INVENTORY_BUTTON_HIDDEN_POSITION = '-222px';
 const INVENTORY_BUTTON_VISIBLE_POSITION = '0';
 
 // Helper function to set active menu button
-function SetActiveMenuButton(activeButton, activeImage, inactiveButtons, inactiveImages) {
+function SetActiveMenuButton(activeButton, inactiveButtons) {
     activeButton.classList.add('menu-button-active');
     activeButton.classList.remove('menu-button');
     
@@ -72,12 +72,7 @@ function ShowProductsSection() {
     manageInventoryButton.style.bottom = INVENTORY_BUTTON_VISIBLE_POSITION;
     orderByLabel.style.display = 'flex';
 
-    SetActiveMenuButton(
-        menuProductsButton,
-        menuProductsButtonImage,
-        [menuCartButton, menuBuyButton],
-        [menuCartButtonImage, menuBuyButtonImage]
-    );
+    SetActiveMenuButton(menuProductsButton, [menuCartButton, menuBuyButton]);
 
     menuProductsButtonImage.src = 'Recursos/imagenes/WEBP/IconoProductos-Activo.webp';
     menuCartButtonImage.src = 'Recursos/imagenes/WEBP/IconoCarritoCompras.webp';
@@ -94,12 +89,7 @@ function ShowCartSection() {
     manageInventoryButton.style.bottom = INVENTORY_BUTTON_HIDDEN_POSITION;
     orderByLabel.style.display = 'none';
 
-    SetActiveMenuButton(
-        menuCartButton,
-        menuCartButtonImage,
-        [menuProductsButton, menuBuyButton],
-        [menuProductsButtonImage, menuBuyButtonImage]
-    );
+    SetActiveMenuButton(menuCartButton, [menuProductsButton, menuBuyButton]);
 
     menuProductsButtonImage.src = 'Recursos/imagenes/WEBP/IconoProductos.webp';
     menuCartButtonImage.src = 'Recursos/imagenes/WEBP/IconoCarritoCompras-Activo.webp';
@@ -118,12 +108,7 @@ function ShowBuySection() {
     manageInventoryButton.style.bottom = INVENTORY_BUTTON_HIDDEN_POSITION;
     orderByLabel.style.display = 'none';
 
-    SetActiveMenuButton(
-        menuBuyButton,
-        menuBuyButtonImage,
-        [menuProductsButton, menuCartButton],
-        [menuProductsButtonImage, menuCartButtonImage]
-    );
+    SetActiveMenuButton(menuBuyButton, [menuProductsButton, menuCartButton]);
 
     menuProductsButtonImage.src = 'Recursos/imagenes/WEBP/IconoProductos.webp';
     menuCartButtonImage.src = 'Recursos/imagenes/WEBP/IconoCarritoCompras.webp';
