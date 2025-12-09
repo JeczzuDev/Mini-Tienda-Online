@@ -1,5 +1,6 @@
 import { getDatabase, ref, onValue, query, orderByChild } from 'https://www.gstatic.com/firebasejs/9.9.2/firebase-database.js';
 import { main, productsContainer, mainSectionLoader } from './MenuNavigation.js';
+import { EscapeHTML, ValidateImageURL } from './utils.js';
 
 export {
     selectedProductsList,
@@ -8,28 +9,6 @@ export {
     FormatPrice,
     SetSelectedProducts,
     AddProductsCards
-}
-
-// Helper function to escape HTML to prevent XSS
-function EscapeHTML(str) {
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
-}
-
-// Helper function to validate and sanitize URLs
-function ValidateImageURL(url) {
-    try {
-        const urlObj = new URL(url);
-        // Only allow https protocol for security
-        if (urlObj.protocol === 'https:' || urlObj.protocol === 'http:') {
-            return url;
-        }
-    } catch (e) {
-        console.error('Invalid URL:', url);
-    }
-    // Return a placeholder or empty string for invalid URLs
-    return '';
 }
 
 // variables
@@ -293,7 +272,7 @@ function ShowProductPopUp(productIndex) {
     popUpImage.src = ValidateImageURL(selectedProduct.imageURL);
     popUpName.textContent = selectedProduct.name;
     popUpPrice.textContent = FormatPrice(selectedProduct.price);
-    popUpStock.textContent = `Stock: ${selectedProduct.stock}`;
+    popUpStock.textContent = 'Stock: ' + selectedProduct.stock;
     popUpDescription.textContent = selectedProduct.description;
 
     ShowPopUpImageLoader();
@@ -411,12 +390,17 @@ function AddProduct() {
     SetSelectedProducts();
 }
 
+// Helper function to compare products by name (unique identifier)
+function IsSameProduct(product1, product2) {
+    return product1 && product2 && product1.name === product2.name;
+}
+
 // Function to set selected product quantity into the product pop up
 function GetSelectedProductIndex() {
     let selectedProductIndex = 0;
 
     selectedProductsList.forEach(product => {
-        if (selectedProduct && product && JSON.stringify(selectedProduct) === JSON.stringify(product)) {
+        if (IsSameProduct(selectedProduct, product)) {
             selectedProductIndex = selectedProductsList.indexOf(product);
         }
     });
@@ -468,7 +452,7 @@ function IsProductSelected() {
 
     if (selectedProduct) {
         selectedProductsList.forEach(product => {
-            if (product && JSON.stringify(selectedProduct) === JSON.stringify(product)) {
+            if (IsSameProduct(selectedProduct, product)) {
                 isProductSelected = true;
             }
         });

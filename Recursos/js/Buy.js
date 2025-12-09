@@ -1,6 +1,7 @@
 import { getDatabase, ref, set, child } from 'https://www.gstatic.com/firebasejs/9.9.2/firebase-database.js';
 import { buyContainer, mainSectionLoader } from './MenuNavigation.js';
 import { selectedProductsList, selectedProductsQuantities, FormatPrice, SetSelectedProducts } from './ProductsCatalog.js';
+import { EscapeHTML } from './utils.js';
 
 export {
     SetBuyProcess
@@ -8,13 +9,6 @@ export {
 
 // Constants
 const PAYMENT_PROCESSING_TIME = 5000; // 5 seconds
-
-// Helper function to escape HTML to prevent XSS
-function EscapeHTML(str) {
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
-}
 
 let totalPrice = 0;
 let payMethod = '';

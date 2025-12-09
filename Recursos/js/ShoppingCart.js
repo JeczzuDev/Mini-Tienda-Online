@@ -1,30 +1,9 @@
 import { cartContainer } from './MenuNavigation.js';
 import { selectedProductsList, selectedProductsQuantities, FormatPrice, SetSelectedProducts } from './ProductsCatalog.js';
+import { EscapeHTML, ValidateImageURL } from './utils.js';
 
 export {
     SetShoppingCartProcess
-}
-
-// Helper function to escape HTML to prevent XSS
-function EscapeHTML(str) {
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
-}
-
-// Helper function to validate and sanitize URLs
-function ValidateImageURL(url) {
-    try {
-        const urlObj = new URL(url);
-        // Only allow https protocol for security
-        if (urlObj.protocol === 'https:' || urlObj.protocol === 'http:') {
-            return url;
-        }
-    } catch (e) {
-        console.error('Invalid URL:', url);
-    }
-    // Return a placeholder or empty string for invalid URLs
-    return '';
 }
 
 // Function to check if the cart is empty
