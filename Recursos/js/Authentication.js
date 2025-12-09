@@ -1,4 +1,4 @@
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut }
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged }
   from 'https://www.gstatic.com/firebasejs/9.9.2/firebase-auth.js';
 
 // Authentication reference
@@ -108,17 +108,16 @@ function SignOut() {
   });
 }
 
-window.addEventListener('onload', () => {
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      // User is signed in, see docs for a list of available properties
-      // https://firebase.google.com/docs/reference/js/firebase.User
-      SetUserSignIn(user.email);
-    } else {
-      // User is signed out
-      SetUserSignOut();
-    }
-  });
+// Monitor authentication state changes
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // User is signed in, see docs for a list of available properties
+    // https://firebase.google.com/docs/reference/js/firebase.User
+    SetUserSignIn(user.email);
+  } else {
+    // User is signed out
+    SetUserSignOut();
+  }
 });
 
 

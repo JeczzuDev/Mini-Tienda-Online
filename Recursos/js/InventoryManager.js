@@ -51,9 +51,11 @@ inputImage.onchange = () => {
 
 // Process to set or update product data
 function SetProductProcess() {
-  if (imageToUpload && inputName.value != '') UploadImage();
-  else productInfo.innerHTML = 'Ingresá IMAGÉN y NOMBRE del producto.';
-  AnimateProductInfo();
+  if (imageToUpload && inputName.value != '' && ValidateProductInputs()) UploadImage();
+  else if (!imageToUpload || inputName.value == '') {
+    productInfo.innerHTML = 'Ingresá IMAGÉN y NOMBRE del producto.';
+    AnimateProductInfo();
+  }
 }
 
 // Process to get product data
@@ -133,6 +135,26 @@ function SetProduct(downloadURL) {
       ShowProductLoader(false);
       AnimateProductInfo();
     });
+}
+
+// Function to validate product inputs
+function ValidateProductInputs() {
+  const price = Number(inputPrice.value);
+  const stock = Number(inputStock.value);
+
+  if (inputPrice.value !== '' && (isNaN(price) || price < 0)) {
+    productInfo.innerHTML = 'El PRECIO debe ser un número válido y no negativo.';
+    AnimateProductInfo();
+    return false;
+  }
+
+  if (inputStock.value !== '' && (isNaN(stock) || stock < 0 || !Number.isInteger(stock))) {
+    productInfo.innerHTML = 'El STOCK debe ser un número entero válido y no negativo.';
+    AnimateProductInfo();
+    return false;
+  }
+
+  return true;
 }
 
 // Function to get product data

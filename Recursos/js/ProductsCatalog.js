@@ -10,12 +10,19 @@ export {
     AddProductsCards
 }
 
+// Helper function to escape HTML to prevent XSS
+function EscapeHTML(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
 // variables
 let selectedProduct;
 let maxProductQuantity;
 let lastButtonText = '';
-let buttonTextMouseEnter = 'Añadir al Carro <img class="add-product" src="Recursos/imagenes/WEBP/AñadirAlCarro.webp" alt="" />';
-let buttonTextMouseOut = 'Añadir al Carro <img class="add-product" src="Recursos/imagenes/WEBP/AñadirAlCarro.webp" alt="" />';
+        let buttonTextMouseEnter = 'Añadir al Carro <img class="add-product" src="Recursos/imagenes/WEBP/AñadirAlCarro.webp" alt="Icono de añadir al carro" />';
+let buttonTextMouseOut = 'Añadir al Carro <img class="add-product" src="Recursos/imagenes/WEBP/AñadirAlCarro.webp" alt="Icono de añadir al carro" />';
 
 
 /* ---------------------------------------------------------- */
@@ -153,17 +160,21 @@ function AddProductsCards() {
             ShowProductPopUp(productIndex);
         });
 
+        // Escape user-generated content to prevent XSS
+        const escapedName = EscapeHTML(product.name);
+        const escapedImageURL = EscapeHTML(product.imageURL);
+
         productCard.innerHTML =
             `<div id="image-loader-${productIndex}" class="loader">
                 '<div></div><div></div><div></div><div></div>
             </div>
-            <img id="image-${productIndex}" class="product-image" src="${product.imageURL}" alt="" />
+            <img id="image-${productIndex}" class="product-image" src="${escapedImageURL}" alt="Imagen de ${escapedName}" />
             <span id="product-quantity-${productIndex}" class="product-quantity">1</span>
-            <span class="product-name">${product.name}</span>
+            <span class="product-name">${escapedName}</span>
             <span class="product-price">${FormatPrice(product.price)}</span>
             <div id="add-product-button-${productIndex}" class="add-product-button">
                 Añadir al Carro 
-                <img class="add-product" src="Recursos/imagenes/WEBP/AñadirAlCarro.webp" alt=""/>
+                <img class="add-product" src="Recursos/imagenes/WEBP/AñadirAlCarro.webp" alt="Icono de añadir al carro"/>
             </div>`;
 
         productsContainer.appendChild(productCard);
@@ -257,10 +268,10 @@ function ShowProductPopUp(productIndex) {
     let selectedProductQuantity = selectedProductsQuantities[selectedProductIndex];
 
     popUpImage.src = selectedProduct.imageURL;
-    popUpName.innerHTML = selectedProduct.name;
-    popUpPrice.innerHTML = `${FormatPrice(selectedProduct.price)}`;
-    popUpStock.innerHTML = `Stock: ${selectedProduct.stock}`;
-    popUpDescription.innerHTML = selectedProduct.description;
+    popUpName.textContent = selectedProduct.name;
+    popUpPrice.textContent = FormatPrice(selectedProduct.price);
+    popUpStock.textContent = `Stock: ${selectedProduct.stock}`;
+    popUpDescription.textContent = selectedProduct.description;
 
     ShowPopUpImageLoader();
     popUpBackground.style.display = 'flex';
@@ -393,12 +404,12 @@ function GetSelectedProductIndex() {
 // Function to change add product button style from pop up
 function SetAddButtonStyle(isAddedStyle) {
     if (isAddedStyle) {
-        buttonTextMouseEnter = 'Eliminar <img class="add-product" src="Recursos/imagenes/WEBP/quitarActivo.webp" alt="" />';
-        buttonTextMouseOut = 'En el Carro <img class="add-product" src="Recursos/imagenes/WEBP/IconoCarritoCompras-Activo.webp" alt="" />';
+        buttonTextMouseEnter = 'Eliminar <img class="add-product" src="Recursos/imagenes/WEBP/quitarActivo.webp" alt="Icono de eliminar" />';
+        buttonTextMouseOut = 'En el Carro <img class="add-product" src="Recursos/imagenes/WEBP/IconoCarritoCompras-Activo.webp" alt="Icono de carrito activo" />';
         popUpAddProductButton.classList.add('pop-up-remove-product-button');
     } else {
-        buttonTextMouseEnter = 'Añadir al Carro <img class="add-product" src="Recursos/imagenes/WEBP/AñadirAlCarro.webp" alt="" />';
-        buttonTextMouseOut = 'Añadir al Carro <img class="add-product" src="Recursos/imagenes/WEBP/AñadirAlCarro.webp" alt="" />';
+        buttonTextMouseEnter = 'Añadir al Carro <img class="add-product" src="Recursos/imagenes/WEBP/AñadirAlCarro.webp" alt="Icono de añadir al carro" />';
+        buttonTextMouseOut = 'Añadir al Carro <img class="add-product" src="Recursos/imagenes/WEBP/AñadirAlCarro.webp" alt="Icono de añadir al carro" />';
         popUpAddProductButton.classList.remove('pop-up-remove-product-button');
     }
 }
@@ -417,13 +428,13 @@ function SetProductCardStyle(isAddedStyle, addedProductIndex) {
         addedProductQuantity.innerHTML = selectedProductQuantity;
         addedProductCard.classList.add('added-product-card');
         addedCardButton.classList.add('added-product-button');
-        addedCardButton.innerHTML = 'En el Carro <img class="add-product" src="Recursos/imagenes/WEBP/IconoCarritoCompras-Activo.webp" alt=""/>';
+        addedCardButton.innerHTML = 'En el Carro <img class="add-product" src="Recursos/imagenes/WEBP/IconoCarritoCompras-Activo.webp" alt="Icono de carrito activo"/>';
     } else {
         addedProductQuantity.style.opacity = '0';
         addedProductQuantity.innerHTML = '';
         addedProductCard.classList.remove('added-product-card');
         addedCardButton.classList.remove('added-product-button');
-        addedCardButton.innerHTML = 'Añadir al Carro <img class="add-product" src="Recursos/imagenes/WEBP/AñadirAlCarro.webp" alt=""/>';
+        addedCardButton.innerHTML = 'Añadir al Carro <img class="add-product" src="Recursos/imagenes/WEBP/AñadirAlCarro.webp" alt="Icono de añadir al carro"/>';
     }
 
 }

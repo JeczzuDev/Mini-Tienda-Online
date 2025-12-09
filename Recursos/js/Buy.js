@@ -6,6 +6,16 @@ export {
     SetBuyProcess
 }
 
+// Constants
+const PAYMENT_PROCESSING_TIME = 5000; // 5 seconds
+
+// Helper function to escape HTML to prevent XSS
+function EscapeHTML(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
 let totalPrice = 0;
 let payMethod = '';
 let buyProductsList = [];
@@ -65,8 +75,11 @@ function SetProductTable() {
         let productsPrice = selectedProduct.price * quantity;
         totalPrice += productsPrice;
 
+        // Escape user-generated content to prevent XSS
+        const escapedName = EscapeHTML(selectedProduct.name);
+
         productTableElement.innerHTML =
-            `<td>${selectedProduct.name}</td>
+            `<td>${escapedName}</td>
             <td>${quantity}</td>
             <td>${FormatPrice(selectedProduct.price)}</td>
             <td>${FormatPrice(productsPrice)}</td>`;
@@ -99,11 +112,11 @@ function SetPaySection() {
         <section class="pay-methods-buttons">
             <button id="cash-method-button">
                 Efectivo
-                <img class="icon" src="Recursos/imagenes/WEBP/cash-method-icon.webp">
+                <img class="icon" src="Recursos/imagenes/WEBP/cash-method-icon.webp" alt="Icono de efectivo">
             </button>
             <button id="card-method-button"> 
                 Debito / Credito
-                <img class="icon" src="Recursos/imagenes/WEBP/card-method-icon.webp">
+                <img class="icon" src="Recursos/imagenes/WEBP/card-method-icon.webp" alt="Icono de tarjeta">
             </button>
         </section>
         <button id="pay-button" class="pay-button">Pagar</button>`;
@@ -145,8 +158,6 @@ function SetPaySectionButtons() {
 
 // Set style and event for payButton
 function SetPayButton() {
-    let timeoutTime = 5000;
-
     mainSectionLoader.style.display = 'inline-block';
     buyContainer.innerHTML = '<div class="info">Procesando pago...</div>';
 
@@ -155,14 +166,14 @@ function SetPayButton() {
     setTimeout(() => {
         buyContainer.innerHTML =
             `<div class="info">COMPRA EXITOSA!!!</div>
-            <img class="success-buy-icon" src="Recursos/imagenes/WEBP/success-buy-icon.webp" alt="">
+            <img class="success-buy-icon" src="Recursos/imagenes/WEBP/success-buy-icon.webp" alt="Icono de compra exitosa">
             <div class="info">Gracias por tu preferencia<br>(ᵔ▽ᵔ)</div>`;
         buyContainer.style.display = 'flex';
 
         mainSectionLoader.style.display = 'none';
 
 
-    }, timeoutTime);
+    }, PAYMENT_PROCESSING_TIME);
 }
 
 // Fill array to save data of selected products to buy

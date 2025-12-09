@@ -5,6 +5,13 @@ export {
     SetShoppingCartProcess
 }
 
+// Helper function to escape HTML to prevent XSS
+function EscapeHTML(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
 // Function to check if the cart is empty
 function SetShoppingCartProcess() {
     if (selectedProductsList.length > 0) {
@@ -30,14 +37,19 @@ function SetShoppingCart() {
         cartProduct.id = productIndex;
         cartProduct.classList.add('cart-product');
 
+        // Escape user-generated content to prevent XSS
+        const escapedName = EscapeHTML(selectedProduct.name);
+        const escapedDescription = EscapeHTML(selectedProduct.description);
+        const escapedImageURL = EscapeHTML(selectedProduct.imageURL);
+
         cartProduct.innerHTML =
             `<div id="cart-image-loader-${productIndex}" class="loader">
                 '<div></div><div></div><div></div><div></div>
             </div>
-            <img id="cart-image-${productIndex}" class="cart-product-image" src="${selectedProduct.imageURL}" alt="" />
+            <img id="cart-image-${productIndex}" class="cart-product-image" src="${escapedImageURL}" alt="Imagen de ${escapedName}" />
             <div class="cart-product-description-group">
-                <span class="cart-product-name">${selectedProduct.name}</span>
-                <span class="cart-product-description">${selectedProduct.description}</span>
+                <span class="cart-product-name">${escapedName}</span>
+                <span class="cart-product-description">${escapedDescription}</span>
             </div>
             <div class="cart-product-details-group">
                 <span class="cart-product-price">${FormatPrice(selectedProduct.price)}</span>
@@ -49,7 +61,7 @@ function SetShoppingCart() {
                 </div>
                 <button id="remove-cart-product-button-${productIndex}" class="remove-cart-product-button">
                     Eliminar del Carro
-                    <img src="Recursos/imagenes/WEBP/quitarActivo.webp" alt="" />
+                    <img src="Recursos/imagenes/WEBP/quitarActivo.webp" alt="Icono de eliminar" />
                 </button>
             </div>`;
 
@@ -150,7 +162,7 @@ function SetCleanCartButton() {
     const cleanCartButton = document.createElement('button');
     cleanCartButton.innerHTML = 
         `Vaciar el Carro
-        <img src="Recursos/imagenes/WEBP/IconoCarritoCompras.webp" alt="" />`;
+        <img src="Recursos/imagenes/WEBP/IconoCarritoCompras.webp" alt="Icono de carrito de compras" />`;
     cleanCartButton.id = 'clean-cart-button';
     cleanCartButton.classList.add('clean-cart-button');
 
