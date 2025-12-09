@@ -135,27 +135,34 @@ function GetProducts() {
 
 // Function to get selected products from local storage
 function GetSelectedProducts() {
-    let selectedProductsSaved = JSON.parse(localStorage.getItem('selectedProductsList'));
-    let productsQuantitiesSaved = JSON.parse(localStorage.getItem('selectedProductsQuantities'));
+    try {
+        let selectedProductsSaved = JSON.parse(localStorage.getItem('selectedProductsList'));
+        let productsQuantitiesSaved = JSON.parse(localStorage.getItem('selectedProductsQuantities'));
 
-    if (selectedProductsSaved !== null) {
-        selectedProductsSaved.forEach(product => {
-            selectedProductsList.push(product);
-        });
+        if (selectedProductsSaved !== null) {
+            selectedProductsSaved.forEach(product => {
+                selectedProductsList.push(product);
+            });
+        }
+
+        if (productsQuantitiesSaved !== null) {
+            productsQuantitiesSaved.forEach(quantity => {
+                selectedProductsQuantities.push(quantity);
+            });
+        }
+    } catch (error) {
+        console.error('Error loading from localStorage:', error);
     }
-
-    if (productsQuantitiesSaved !== null) {
-        productsQuantitiesSaved.forEach(quantity => {
-            selectedProductsQuantities.push(quantity);
-        });
-    }
-
 }
 
 // Function to set selected product into local storage
 function SetSelectedProducts() {
-    localStorage.setItem('selectedProductsList', JSON.stringify(selectedProductsList));
-    localStorage.setItem('selectedProductsQuantities', JSON.stringify(selectedProductsQuantities));
+    try {
+        localStorage.setItem('selectedProductsList', JSON.stringify(selectedProductsList));
+        localStorage.setItem('selectedProductsQuantities', JSON.stringify(selectedProductsQuantities));
+    } catch (error) {
+        console.error('Error saving to localStorage:', error);
+    }
 }
 
 // Function to create products cards with products list
@@ -409,7 +416,7 @@ function GetSelectedProductIndex() {
     let selectedProductIndex = 0;
 
     selectedProductsList.forEach(product => {
-        if (JSON.stringify(selectedProduct) === JSON.stringify(product)) {
+        if (selectedProduct && product && JSON.stringify(selectedProduct) === JSON.stringify(product)) {
             selectedProductIndex = selectedProductsList.indexOf(product);
         }
     });
@@ -459,11 +466,13 @@ function SetProductCardStyle(isAddedStyle, addedProductIndex) {
 function IsProductSelected() {
     let isProductSelected = false;
 
-    selectedProductsList.forEach(product => {
-        if (JSON.stringify(selectedProduct) === JSON.stringify(product)) {
-            isProductSelected = true;
-        }
-    });
+    if (selectedProduct) {
+        selectedProductsList.forEach(product => {
+            if (product && JSON.stringify(selectedProduct) === JSON.stringify(product)) {
+                isProductSelected = true;
+            }
+        });
+    }
 
     return isProductSelected;
 }

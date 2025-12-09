@@ -49,20 +49,35 @@ menuBuyButton.addEventListener('click', () => {
 // ---------------------------------------------------------
 // FUNCTIONS
 
+// Constants for magic numbers
+const INVENTORY_BUTTON_HIDDEN_POSITION = '-222px';
+const INVENTORY_BUTTON_VISIBLE_POSITION = '0';
+
+// Helper function to set active menu button
+function SetActiveMenuButton(activeButton, activeImage, inactiveButtons, inactiveImages) {
+    activeButton.classList.add('menu-button-active');
+    activeButton.classList.remove('menu-button');
+    
+    inactiveButtons.forEach(button => {
+        button.classList.add('menu-button');
+        button.classList.remove('menu-button-active');
+    });
+}
+
 function ShowProductsSection() {
     document.title = 'MTO | Productos';
 
     AddProductsCards();
 
-    manageInventoryButton.style.bottom = '0';
+    manageInventoryButton.style.bottom = INVENTORY_BUTTON_VISIBLE_POSITION;
     orderByLabel.style.display = 'flex';
 
-    menuProductsButton.classList.add('menu-button-active');
-    menuCartButton.classList.add('menu-button');
-    menuBuyButton.classList.add('menu-button');
-
-    menuCartButton.classList.remove('menu-button-active');
-    menuBuyButton.classList.remove('menu-button-active');
+    SetActiveMenuButton(
+        menuProductsButton,
+        menuProductsButtonImage,
+        [menuCartButton, menuBuyButton],
+        [menuCartButtonImage, menuBuyButtonImage]
+    );
 
     menuProductsButtonImage.src = 'Recursos/imagenes/WEBP/IconoProductos-Activo.webp';
     menuCartButtonImage.src = 'Recursos/imagenes/WEBP/IconoCarritoCompras.webp';
@@ -76,15 +91,15 @@ function ShowProductsSection() {
 function ShowCartSection() {
     document.title = 'MTO | Carro';
 
-    manageInventoryButton.style.bottom = '-222px';
+    manageInventoryButton.style.bottom = INVENTORY_BUTTON_HIDDEN_POSITION;
     orderByLabel.style.display = 'none';
 
-    menuProductsButton.classList.add('menu-button');
-    menuCartButton.classList.add('menu-button-active');
-    menuBuyButton.classList.add('menu-button');
-
-    menuProductsButton.classList.remove('menu-button-active');
-    menuBuyButton.classList.remove('menu-button-active');
+    SetActiveMenuButton(
+        menuCartButton,
+        menuCartButtonImage,
+        [menuProductsButton, menuBuyButton],
+        [menuProductsButtonImage, menuBuyButtonImage]
+    );
 
     menuProductsButtonImage.src = 'Recursos/imagenes/WEBP/IconoProductos.webp';
     menuCartButtonImage.src = 'Recursos/imagenes/WEBP/IconoCarritoCompras-Activo.webp';
@@ -100,15 +115,15 @@ function ShowCartSection() {
 function ShowBuySection() {
     document.title = 'MTO | Comprar';
 
-    manageInventoryButton.style.bottom = '-222px';
+    manageInventoryButton.style.bottom = INVENTORY_BUTTON_HIDDEN_POSITION;
     orderByLabel.style.display = 'none';
 
-    menuProductsButton.classList.add('menu-button');
-    menuCartButton.classList.add('menu-button');
-    menuBuyButton.classList.add('menu-button-active');
-
-    menuProductsButton.classList.remove('menu-button-active');
-    menuCartButton.classList.remove('menu-button-active');
+    SetActiveMenuButton(
+        menuBuyButton,
+        menuBuyButtonImage,
+        [menuProductsButton, menuCartButton],
+        [menuProductsButtonImage, menuCartButtonImage]
+    );
 
     menuProductsButtonImage.src = 'Recursos/imagenes/WEBP/IconoProductos.webp';
     menuCartButtonImage.src = 'Recursos/imagenes/WEBP/IconoCarritoCompras.webp';

@@ -36,15 +36,19 @@ signOutButton.onclick = SignOut;
 // Process to sign up a new user
 function CheckSignUp() {
   if (inputEmail.value != '' && inputPassword.value != '') SingUp();
-  else authInfo.innerHTML = 'Ingresá CORREO ELECTRONICO y CONTRASEÑA.';
-  AnimateAuthInfo();
+  else {
+    authInfo.innerHTML = 'Ingresá CORREO ELECTRONICO y CONTRASEÑA.';
+    AnimateAuthInfo();
+  }
 }
 
 // Process to log in a user
 function CheckSignIn() {
   if (inputEmail.value != '' && inputPassword.value != '') SignIn();
-  else authInfo.innerHTML = 'Ingresá CORREO ELECTRONICO y CONTRASEÑA.';
-  AnimateAuthInfo();
+  else {
+    authInfo.innerHTML = 'Ingresá CORREO ELECTRONICO y CONTRASEÑA.';
+    AnimateAuthInfo();
+  }
 }
 
 // Function to create a new user with email and password
